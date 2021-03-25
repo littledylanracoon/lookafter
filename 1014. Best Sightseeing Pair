@@ -1,0 +1,46 @@
+
+參考
+1.
+class Solution {
+public:
+    int maxScoreSightseeingPair(vector<int>& A) {
+        int ans=0,k=A[0]-1;
+        for(int i=1;i<A.size();i++){
+            ans=max(A[i]+k,ans);
+            k=max(k,A[i]);
+            k--;
+        }
+        return ans;
+    }
+};
+
+2.
+int maxScoreSightseeingPair(std::vector<int>& values) {
+        int largest = 0;
+        int second_largest = 0;
+        int best_score = 0;
+        for (int i = 0; i < values.size(); ++i){
+
+            if (values[i] >= largest){
+                second_largest = largest;
+                largest = values[i];
+
+            }
+            else if (values[i] >= second_largest){
+                second_largest = values[i];
+            }
+            if (best_score < largest + second_largest){
+                best_score = largest + second_largest;
+            }
+            --largest;
+            --second_largest;
+        }
+        return best_score;
+    }
+    
+ 解析:   
+ 它的公式是 score = values[i] + values[j] + i - j 解碼這題要用到它的時候 先把i j 的值代換成front end
+ score = values[end] + values[front] + end - front
+在這個程式 其實它並沒有在每次迴圈紀錄front跟end的值 它是把values[end] + end - front存到k裡面 
+然後在ans那行 把新得到的A[i] 帶入A[i] + k (= A[front] + A[end] + end - front 註: front即是i) 在把運算結果拿去跟之前的ans做比較 把較大的那個回傳更新ans
+可以想成是說 k就是紀錄A在end這個基準點的值加上當下i跟end的offset 然後在k開頭這行白話上就是 A[i]的值是不是夠大到 值得拿它去取代原本的基準點

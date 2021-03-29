@@ -1,0 +1,69 @@
+Sol1:
+
+
+class Solution {
+public:
+	// Try to break the number of digits in this way!!
+	// 9 -> 1                    [means, from 1 to 9, every number has 1 digit]
+	// 90 -> 2                   [numbers from 10 to 99 has 2 digits]
+	// 900 -> 3
+	// 9000 -> 4 ... and so on
+    int findNthDigit(int n) {
+        long long firstNum = 1, divide = 9, cntDigs = 1;
+        
+        while(n > (cntDigs * divide)) {
+            n -= (cntDigs * divide);
+            divide *= 10;
+            cntDigs++;
+            firstNum *= 10;
+        }
+        firstNum += (n - 1) / cntDigs;
+
+        int position = cntDigs - ((n - 1) % cntDigs) - 1;
+        while(position > 0) {
+            firstNum /= 10;
+            position--;
+        }
+        return firstNum % 10;
+    }
+};
+
+Sol2:
+
+class Solution {
+public:
+    int findNthDigit(int n) 
+    {
+        long long start = 1, digitBit = 1, times = 9;
+        while (n > digitBit * times) // count the num of digits 
+        {
+            n -= digitBit * times;
+            digitBit++;
+            times *= 10;
+            start *= 10; // start is the first num
+        }
+        start += (n - 1) / digitBit;   
+        string t = to_string(start);        
+        return t[(n - 1) % digitBit] - '0'; 
+};
+
+Sol3:
+
+class Solution:
+    def findNthDigit(self, n: int) -> int:
+        if n < 10:
+            return n
+        # find the digit of n
+        digit = 0
+        tmp = 0
+        pre = 0
+        while tmp < n:
+            pre = tmp
+            digit += 1
+            tmp += (9*(10**(digit-1)))*digit
+        # find where it belongs
+        n -= pre
+        num = 10**(digit-1) + ((n-1)//digit)
+        # find the index
+        index = (n-1)%digit
+        return num//(10**(digit-index-1))%10
